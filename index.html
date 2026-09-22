@@ -1,0 +1,20 @@
+<!DOCTYPE html><html lang="pt-br"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Quartinho da Aprovação</title><style>
+body{margin:0;font-family:Trebuchet MS;background:linear-gradient(#bfe7ff,#ffe4f1)}
+.wrap{max-width:900px;margin:auto;padding:20px}
+.hero,.box{background:#fff;border-radius:28px;padding:20px;box-shadow:0 8px 20px rgba(0,0,0,.12);margin:18px 0}
+h1{color:#ff5f96;text-align:center} .msg{background:#fff6bf;border-radius:18px;padding:14px;text-align:center;font-weight:bold}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px}
+.card{text-align:center;background:#fff7fb;border-radius:18px;padding:14px}.big{font-size:32px;color:#ff5f96;font-weight:bold}
+.sub{display:flex;justify-content:space-between;align-items:center;background:#f7fbff;padding:12px;border-radius:14px;margin:10px 0;flex-wrap:wrap}
+input{width:65px;padding:7px;border-radius:10px;border:2px solid #bcdcff}
+button{background:#ff6ea9;color:#fff;border:none;padding:8px 16px;border-radius:999px;font-weight:bold;cursor:pointer}
+.bar{height:8px;background:#eee;border-radius:999px;overflow:hidden;margin-top:6px}.fill{height:100%;background:linear-gradient(90deg,#ff8db8,#ffd86f)}
+.badges{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:10px}.badge{background:#fff9d9;border-radius:16px;padding:12px;text-align:center;opacity:.35}.on{opacity:1}
+</style></head><body><div class="wrap"><div class="hero"><h1>🌈 Quartinho da Aprovação</h1><div class="msg" id="daily"></div></div><div class="box"><div class="grid"><div class="card"><div>📚 Respondidas</div><div class="big" id="r">0</div></div><div class="card"><div>⭐ Acertos</div><div class="big" id="a">0</div></div><div class="card"><div>🎯 %</div><div class="big" id="p">0%</div></div><div class="card"><div>🔥 Streak</div><div class="big">1</div></div></div></div><div class="box"><h2>🌼 Disciplinas</h2><div id="list"></div></div><div class="box"><h2>🏆 Medalhas</h2><div class="badges"><div id="b100" class="badge">100 ⭐</div><div id="b300" class="badge">300 🌈</div><div id="b500" class="badge">500 🎀</div><div id="b1000" class="badge">1000 🏰</div></div></div></div><script>
+const msgs=["Hoje você não precisa ser perfeita. Só precisa continuar. 🌷","Cada questão é um tijolinho da sua aprovação. 🏰","Até as Superpoderosas treinavam antes de salvar Townsville. ⭐","Respira. Uma questão de cada vez. ☁️","Persistência também é um superpoder. 💛","Seu esforço de hoje vai virar tranquilidade amanhã. 🎀"];daily.textContent=msgs[new Date().getDate()%msgs.length];
+const subs=[["Português","📖"],["Informática","💻"],["Raciocínio","🧩"],["Constitucional","⚖️"],["Administrativo","📜"],["Específicos","🧠"],["Araguaína","🌴"],["Redação","✍️"]];
+let d=JSON.parse(localStorage.getItem("qa-v1")||"{}");subs.forEach(([n])=>d[n]=d[n]||{r:0,a:0});
+function save(){localStorage.setItem("qa-v1",JSON.stringify(d))}
+function add(n){const rr=+document.getElementById("r-"+n).value||0;const aa=+document.getElementById("a-"+n).value||0;if(aa>rr)return alert("Acertos maiores que respondidas.");d[n].r+=rr;d[n].a+=aa;render()}
+function render(){let tr=0,ta=0;list.innerHTML="";subs.forEach(([n,e])=>{tr+=d[n].r;ta+=d[n].a;const pct=d[n].r?Math.round(d[n].a/d[n].r*100):0;list.innerHTML+=`<div class=sub><div><b>${e} ${n}</b><div>${d[n].a}/${d[n].r} · ${pct}%</div><div class=bar><div class=fill style="width:${pct}%"></div></div></div><div><input id="r-${n}" type=number placeholder=R><input id="a-${n}" type=number placeholder=A><button onclick="add('${n}')">Salvar</button></div></div>`});r.textContent=tr;a.textContent=ta;p.textContent=tr?Math.round(ta/tr*100)+"%":"0%";[100,300,500,1000].forEach(v=>document.getElementById("b"+v).className="badge"+(tr>=v?" on":""));save()}render();
+</script></body></html>
